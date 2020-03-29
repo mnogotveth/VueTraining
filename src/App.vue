@@ -1,28 +1,42 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+      <div class="message">
+          <MessageList :messages="$store.state.messages"/>
+          <Form v-on:send-message="sendMessage"/>
+      </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+    import MessageList from "./components/MessageList";
+    import Form from "./components/Form";
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    MessageList,
+    Form
+  },
+  data: () => ({
+    messages: [],
+    message: "",
+    nick: ""
+  }),
+  mounted: function () {
+    setInterval(this.receiveMessage, 1000);
+  },
+  methods: {
+    receiveMessage() {
+      this.$store.dispatch('receiveMessage');
+    },
+    sendMessage(messageObj) {
+      this.$store.dispatch('sendMessage', messageObj);
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    .message{
+        justify-content: center;
+    }
 </style>
